@@ -45,4 +45,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function department()
+{
+    // Un usuario pertenece a (belongsTo) un departamento
+    return $this->belongsTo(Department::class);
+}
 }

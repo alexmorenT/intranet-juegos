@@ -15,11 +15,31 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // 1. Creamos un departamento
+        $depto = \App\Models\Department::create([
+            'name' => 'Desarrollo'
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
+        // 2. Creamos un usuario y lo asignamos al departamento
+        $user = \App\Models\User::create([
+            'name' => 'Jugador Uno',
             'email' => 'test@example.com',
+            'password' => bcrypt('password'), // Siempre encriptada
+            'department_id' => $depto->id,    // Aquí usamos la relación
+        ]);
+
+        // 3. Creamos un juego
+        $game = \App\Models\Game::create([
+            'name' => 'Wordle',
+            'description' => 'Adivina la palabra en 6 intentos'
+        ]);
+
+        // 4. Creamos una puntuación de prueba
+        \App\Models\Score::create([
+            'user_id' => $user->id,
+            'game_id' => $game->id,
+            'points' => 90,
+            'time_taken' => 45
         ]);
     }
 }
