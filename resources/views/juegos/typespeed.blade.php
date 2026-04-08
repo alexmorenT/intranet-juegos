@@ -19,24 +19,31 @@
                     </div>
                 </div>
 
-                <div id="contenedor" class="bg-gray-50 dark:bg-gray-900/50 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700 shadow-inner">
+                <div id="contenedor" class="bg-gray-50 dark:bg-gray-900/50 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700 shadow-inner flex flex-wrap justify-center items-center overflow-y-auto p-8 relative">
                     <button id="iniciar" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-12 rounded-2xl transition transform active:scale-95 shadow-xl">
                         EMPEZAR PRUEBA
                     </button>
                 </div>
 
-                <div id="virtual-keyboard" class="opacity-30 transition-opacity duration-500 pointer-events-none">
+                <input type="text" id="input-movil"
+                    autocorrect="off"
+                    autocapitalize="none"
+                    spellcheck="false"
+                    autocomplete="off"
+                    style="position: absolute; opacity: 0; pointer-events: none; z-index: -1; left: -9999px;">
+
+                <div id="virtual-keyboard" class="mt-8 opacity-30 transition-opacity duration-500 pointer-events-none">
                     @php
                     $filas = [
                     ['q','w','e','r','t','y','u','i','o','p'],
                     ['a','s','d','f','g','h','j','k','l','ñ'],
-                    ['shift','z','x','c','v','b','n','m',',','.']
+                    ['z','x','c','v','b','n','m',',','.']
                     ];
                     @endphp
                     @foreach($filas as $fila)
                     <div class="flex justify-center gap-1 mb-2">
                         @foreach($fila as $tecla)
-                        <div data-key="{{ $tecla }}" class="key {{ $tecla === 'shift' ? 'w-16' : 'w-10 sm:w-12' }} h-12 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center font-bold text-gray-500 dark:text-gray-300 uppercase text-[10px] sm:text-xs border-b-4 border-gray-300 dark:border-gray-900 transition-all">
+                        <div data-key="{{ $tecla }}" class="key w-10 sm:w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center font-bold text-gray-500 dark:text-gray-300 uppercase text-[10px] sm:text-xs border-b-4 border-gray-300 dark:border-gray-900 transition-all">
                             {{ $tecla }}
                         </div>
                         @endforeach
@@ -82,47 +89,63 @@
     </div>
 
     <style>
-        /* Contenedor principal del juego */
         #contenedor {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0;
-            /* Quitamos el gap para que los espacios los manejen los inputs de espacio */
-            padding: 2rem;
-            line-height: 3rem;
-            /* Aumenta el espacio entre líneas para que no se amontonen */
+            max-height: 250px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            padding-bottom: 2rem;
+            line-height: 3.5rem;
         }
 
-        /* Estilo de cada letra */
+        /* Ocultar scrollbar */
+        #contenedor::-webkit-scrollbar {
+            display: none;
+        }
+
         .type-char {
-            width: 1ch;
-            height: 2.2rem;
+            width: 1.2ch;
+            height: 2.5rem;
             background: transparent;
             border: none;
             border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-            /* Guía visual sutil */
             outline: none;
             text-align: center;
             font-family: 'Courier New', monospace;
             font-weight: 700;
             font-size: 1.8rem;
-            margin: 0;
+            margin: 0 1px;
             padding: 0;
             display: inline-block;
-            transition: all 0.1s;
+            transition: all 0.2s ease;
         }
 
         .dark .type-char {
             border-bottom-color: rgba(255, 255, 255, 0.1);
+            color: white;
         }
 
-        /* Resalte del input que tiene el foco actual */
-        .type-char:focus {
-            border-bottom: 3px solid #6366f1;
-            background-color: rgba(99, 102, 241, 0.1);
+        /* CURSOR VIRTUAL (Resaltado de letra activa) */
+        .letra-activa {
+            border-bottom: 4px solid #6366f1 !important;
+            background-color: rgba(99, 102, 241, 0.15);
+            animation: parpadeo-cursor 0.8s infinite;
+            transform: scale(1.1);
+            border-radius: 4px 4px 0 0;
         }
 
+        @keyframes parpadeo-cursor {
+
+            0%,
+            100% {
+                border-color: #6366f1;
+            }
+
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        /* Colores de acierto/error */
         .key-success {
             background-color: #22c55e !important;
             color: white !important;
@@ -135,6 +158,11 @@
             color: white !important;
             border-bottom-width: 0 !important;
             transform: translateY(4px);
+        }
+
+        /* Opacidad para letras ya escritas */
+        .type-char[style*="color"] {
+            opacity: 0.6;
         }
     </style>
 
