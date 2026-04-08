@@ -34,13 +34,5 @@ class DatabaseSeeder extends Seeder
             'slug' => 'wordle',
             'description' => 'Adivina la palabra en 6 intentos'
         ]);
-
-        // 4. Creamos una puntuación de prueba
-        \App\Models\Score::create([
-            'user_id' => $user->id,
-            'game_id' => $game->id,
-            'points' => 90,
-            'time_taken' => 45
-        ]);
     }
 }
