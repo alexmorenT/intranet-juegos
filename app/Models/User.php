@@ -47,8 +47,14 @@ class User extends Authenticatable
     }
 
     public function department()
-{
-    // Un usuario pertenece a (belongsTo) un departamento
-    return $this->belongsTo(Department::class);
-}
+    {
+        // Un usuario pertenece a (belongsTo) un departamento
+        return $this->belongsTo(Department::class);
+    }
+
+    public function scores()
+    {
+        // Un usuario tiene muchas puntuaciones (hasMany)
+        return $this->hasMany(Score::class);
+    }
 }

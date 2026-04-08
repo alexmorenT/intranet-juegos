@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GameController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -18,6 +19,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/empleados', [UserController::class, 'index'])->name('usuarios.index');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+});
+
+Route::get('/juegos/wordle', [GameController::class, 'wordle'])->name('juegos.wordle')->middleware('auth');
+Route::post('/juegos/save-score', [GameController::class, 'saveScore'])->middleware('auth');
+Route::get('/juegos/typespeed', [GameController::class, 'typeSpeed'])->name('juegos.typespeed')->middleware('auth');
 
 require __DIR__ . '/auth.php';

@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
         // 3. Creamos un juego
         $game = \App\Models\Game::create([
             'name' => 'Wordle',
+            'slug' => 'wordle',
             'description' => 'Adivina la palabra en 6 intentos'
         ]);
 
