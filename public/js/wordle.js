@@ -21,22 +21,33 @@ document.addEventListener("DOMContentLoaded", async () => {
             const respuesta = await fetch("/js/spanish.json");
             const datos = await respuesta.json();
 
-            // Guardamos todo en minúsculas para validar
-            diccionarioCompleto = datos.map((p) => p.toLowerCase());
 
             const palabrasValidas = datos.filter((p) => p.length === 5);
             if (palabrasValidas.length === 0)
                 throw new Error("No hay palabras de 5 letras");
 
-            const seleccionada =
-                palabrasValidas[
-                    Math.floor(Math.random() * palabrasValidas.length)
-                ];
+            // Lógica del Algoritmo Diario
+            const fechaReferencia = new Date("2025-01-01");
+            const fechaActual = new Date();
+
+            const diferenciaMs = fechaActual - fechaReferencia;
+            const diasTranscurridos = Math.floor(
+                diferenciaMs / (1000 * 60 * 60 * 24),
+            );
+
+            // El operador % (módulo) asegura que el índice siempre esté dentro del rango del array
+            const indiceHoy = diasTranscurridos % palabrasValidas.length;
+
+            const seleccionada = palabrasValidas[indiceHoy];
             palabraObjetivo = seleccionada.toUpperCase();
-            console.log("Objetivo para debug:", palabraObjetivo);
+
+            // Guardamos el diccionario para validaciones posteriores
+            diccionarioCompleto = datos.map((p) => p.toLowerCase());
+
+            console.log("La palabra de hoy está lista: ", palabraObjetivo);
         } catch (error) {
-            console.error("Error cargando el diccionario:", error);
-            palabraObjetivo = "MAREO";
+            console.error("Error en la lógica diaria:", error);
+            palabraObjetivo = "MAREO"; // Palabra de respaldo
         }
     }
 
@@ -182,7 +193,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (haGanado) {
             const puntos = (6 - intentoActual) * 100;
             setTimeout(
-                () => enviarPuntuacion(puntos, "¡Felicidades! Has ganado."),
+                () => mostrarModalResultado(puntos, intentoActual + 1),
                 500,
             );
         } else {
@@ -190,27 +201,54 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (intentoActual < intentos.length) {
                 activarFila(intentoActual);
             } else {
-                setTimeout(
-                    () =>
-                        enviarPuntuacion(
-                            0,
-                            "Game Over. La palabra era: " + palabraObjetivo,
-                        ),
-                    500,
-                );
+                setTimeout(() => mostrarModalResultado(0, 6, palabraObjetivo));
             }
         }
     }
 
     // 5. Envío de datos a Laravel
-    function enviarPuntuacion(puntos, mensaje) {
+    function mostrarModalResultado(puntos, intentosHechos, palabraCorrecta) {
         const tiempoFinal = Date.now();
-        const segundosTranscurridos = Math.floor(
+        const tiempoTranscurrido = Math.floor(
             (tiempoFinal - tiempoInicio) / 1000,
         );
 
-        alert(mensaje + "\nTiempo: " + segundosTranscurridos + " segundos.");
+        const mins = Math.floor(tiempoTranscurrido / 60);
+        const segs = tiempoTranscurrido % 60;
+        const tiempoFormateado = `${mins}:${String(segs).padStart(2, "0")}`;
 
+        // 2. Lógica para mostrar la palabra si ha perdido
+        const mensajeElemento = document.getElementById("modal-mensaje");
+        const containerPalabra = document.getElementById(
+            "palabra-correcta-container",
+        );
+        const spanPalabra = document.getElementById("res-palabra");
+
+        if (puntos === 0) {
+            // Si perdió: Cambiamos el mensaje y mostramos la palabra
+            mensajeElemento.innerText = "¡Vaya! No has podido adivinarla.";
+            spanPalabra.innerText = palabraCorrecta;
+            containerPalabra.classList.remove("hidden");
+        } else {
+            // Si ganó: Ocultamos la palabra
+            mensajeElemento.innerText = "¡Has completado el desafío con éxito!";
+            containerPalabra.classList.add("hidden");
+        }
+
+        document.getElementById("res-min").innerText = tiempoFormateado;
+        document.getElementById("res-intentos").innerText = intentosHechos;
+        document.getElementById("res-puntos").innerText = puntos;
+
+        const modal = document.getElementById("modal-resultados");
+        const content = document.getElementById("modal-content");
+        modal.classList.remove("hidden");
+
+        setTimeout(() => {
+            content.classList.remove("scale-95", "opacity-0");
+            content.classList.add("scale-100", "opacity-100");
+        }, 10);
+
+        // Guardar en BD
         fetch("/juegos/save-score", {
             method: "POST",
             headers: {
@@ -220,10 +258,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             body: JSON.stringify({
                 game_id: window.wordleGameId,
                 points: puntos,
-                time_taken: segundosTranscurridos,
+                time_taken: tiempoTranscurrido,
             }),
-        }).then(() => {
-            window.location.href = "/dashboard";
         });
     }
 

@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'department_id',
+        'avatar',
+        'frame_id',
     ];
 
     /**
@@ -56,5 +59,10 @@ class User extends Authenticatable
     {
         // Un usuario tiene muchas puntuaciones (hasMany)
         return $this->hasMany(Score::class);
+    }
+
+    public function frame()
+    {
+        return $this->belongsTo(Frame::class);
     }
 }

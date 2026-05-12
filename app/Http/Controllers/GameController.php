@@ -8,20 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class GameController extends Controller
 {
-    public function wordle()
-    {
-        // El ID 1 será para Wordle (asegúrate de tenerlo en tu tabla 'games')
-        $yaJugo = Score::where('user_id', Auth::id())
-            ->where('game_id', 1)
-            ->whereDate('created_at', now()->toDateString())
-            ->exists();
 
-        if ($yaJugo) {
-            return redirect()->route('dashboard')->with('status', 'Ya has jugado al Wordle hoy. ¡Vuelve mañana!');
-        }
-
-        return view('juegos.wordle');
-    }
 
     public function saveScore(Request $request)
     {
@@ -40,6 +27,21 @@ class GameController extends Controller
         }
     }
 
+    public function wordle()
+    {
+        // El ID 1 será para Wordle (asegúrate de tenerlo en tu tabla 'games')
+        $yaJugo = Score::where('user_id', Auth::id())
+            ->where('game_id', 1)
+            ->whereDate('created_at', now()->toDateString())
+            ->exists();
+
+        if ($yaJugo) {
+            return redirect()->route('dashboard')->with('status', 'Ya has jugado al Wordle hoy. ¡Vuelve mañana!');
+        }
+
+        return view('juegos.wordle');
+    }
+
     public function typeSpeed()
     {
         $yaJugo = Score::where('user_id', Auth::id())
@@ -50,5 +52,17 @@ class GameController extends Controller
             return redirect()->route('dashboard')->with('status', 'Ya has jugado al TypeSpeed hoy. ¡Vuelve mañana!');
         }
         return view('juegos.typespeed');
+    }
+
+    public function bombParty()
+    {
+        $yaJugo = Score::where('user_id', Auth::id())
+            ->where('game_id', 3) // Asegúrate de que el ID 3 corresponde a BombParty
+            ->whereDate('created_at', now()->toDateString())
+            ->exists();
+        if ($yaJugo) {
+            return redirect()->route('dashboard')->with('status', 'Ya has jugado al BombParty hoy. ¡Vuelve mañana!');
+        }
+        return view('juegos.bombparty');
     }
 }

@@ -6,9 +6,16 @@
                 <h1 class="text-3xl font-black text-center mb-8 text-gray-800 dark:text-white uppercase tracking-tighter">
                     Palabra del Día
                 </h1>
+                <div class="mt-8 text-center text-gray-500 dark:text-gray-400 text-sm italic">
+                    Escribe una letra y pulsa ENTER al terminar la fila
+                </div>
+                <div class="text-center mb-4">
+                    <span id="timer-display" class="font-mono text-xl text-indigo-600 dark:text-indigo-400">00:00</span>
+                </div>
 
                 <style>
-                    .blocks {
+                    /* Encapsulamos los bloques dentro del contenedor del juego */
+                    #game-container .blocks {
                         display: flex;
                         align-items: center;
                         justify-content: center;
@@ -16,15 +23,13 @@
                         height: 75px;
                         margin-bottom: 8px;
                         background: transparent;
-                        /* Quitamos el gris oscuro de tu original */
                     }
 
-                    .block {
+                    #game-container .block {
                         display: inline-block;
                         height: 65px;
                         width: 65px;
                         border: 2px solid #d1d5db;
-                        /* Gris suave */
                         border-radius: 12px;
                         text-align: center;
                         font-size: 32px;
@@ -35,14 +40,14 @@
                         transition: all 0.2s;
                     }
 
-                    /* Soporte para modo oscuro */
-                    .dark .block {
+                    /* Soporte para modo oscuro encapsulado */
+                    .dark #game-container .block {
                         background-color: #374151;
                         border-color: #4b5563;
                         color: white;
                     }
 
-                    .block:focus {
+                    #game-container .block:focus {
                         outline: none;
                         border: 3px solid #6366f1;
                         transform: scale(1.05);
@@ -123,7 +128,7 @@
                 </div>
 
                 <style>
-                    /* Animación de vibración para palabras no encontradas */
+                    /* Animación de vibración encapsulada */
                     @keyframes shake {
 
                         0%,
@@ -140,27 +145,27 @@
                         }
                     }
 
-                    .shake {
-                        animation: shake 0.4s ease-in-out;
+                    #game-container .shake {
+                        animation: shake 0.2s ease-in-out;
                     }
 
                     /* Colores del teclado */
-                    .key-correct {
+                    #keyboard .key-correct {
                         background-color: #538d4e !important;
                         color: white !important;
                     }
 
-                    .key-present {
+                    #keyboard .key-present {
                         background-color: #b59f3b !important;
                         color: white !important;
                     }
 
-                    .key-absent {
+                    #keyboard .key-absent {
                         background-color: #3a3a3c !important;
                         color: white !important;
                     }
 
-                    /* Botones especiales más anchos */
+                    /* Botones especiales */
                     #key-ENTER,
                     #key-BORRAR {
                         padding-left: 15px;
@@ -168,17 +173,40 @@
                         font-size: 10px;
                     }
                 </style>
-
-                <div class="mt-8 text-center text-gray-500 dark:text-gray-400 text-sm italic">
-                    Escribe una letra y pulsa ENTER al terminar la fila
-                </div>
-                <div class="text-center mb-4">
-                    <span id="timer-display" class="font-mono text-xl text-indigo-600 dark:text-indigo-400">00:00</span>
-                </div>
             </div>
         </div>
     </div>
+    <div id="modal-resultados" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all scale-95 opacity-0" id="modal-content">
+            <div class="p-8 text-center">
+                <h2 class="text-3xl font-black text-gray-800 dark:text-white mb-2 uppercase tracking-tighter">¡Prueba Finalizada!</h2>
+                <p id="modal-mensaje" class="text-gray-500 dark:text-gray-400 mb-2"></p>
+                <p id="palabra-correcta-container" class="hidden mb-6 text-sm font-medium text-gray-400">
+                    La palabra era: <span id="res-palabra" class="text-indigo-500 font-bold uppercase"></span>
+                </p>
 
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
+                        <p class="text-xs font-bold text-gray-400 uppercase">Tiempo</p>
+                        <p class="text-2xl font-black text-indigo-600"><span id="res-min">0</span> <small class="text-xs">min</small></p>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
+                        <p class="text-xs font-bold text-gray-400 uppercase">Intentos</p>
+                        <p class="text-2xl font-black text-green-500"><span id="res-intentos">0</span><small class="text-xs"> intentos</small></p>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-600 p-6 rounded-2xl mb-8 shadow-lg shadow-indigo-200 dark:shadow-none">
+                    <p class="text-white/80 text-xs font-bold uppercase mb-1">Puntos Obtenidos</p>
+                    <p class="text-white text-5xl font-black" id="res-puntos">0</p>
+                </div>
+
+                <button onclick="window.location.href='/dashboard'" class="w-full py-4 bg-gray-900 dark:bg-white dark:text-gray-900 text-white font-bold rounded-xl hover:scale-[1.02] transition transform active:scale-95">
+                    VOLVER AL DASHBOARD
+                </button>
+            </div>
+        </div>
+    </div>
     <script>
         window.csrfToken = "{{ csrf_token() }}";
         window.wordleGameId = 1;

@@ -128,7 +128,7 @@
         .letra-activa {
             border-bottom: 4px solid #6366f1 !important;
             background-color: rgba(99, 102, 241, 0.15);
-            animation: parpadeo-cursor 0.8s infinite;
+            animation: parpadeo-cursor 0.3s infinite;
             transform: scale(1.1);
             border-radius: 4px 4px 0 0;
         }

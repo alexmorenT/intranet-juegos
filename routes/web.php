@@ -23,8 +23,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
 });
 
+Route::get('/estadisticas', [App\Http\Controllers\StatsController::class, 'index'])
+    ->name('estadisticas')
+    ->middleware('auth');
+
+    Route::get('/ranking', [App\Http\Controllers\RankingController::class, 'index'])
+    ->name('ranking')
+    ->middleware('auth');
+
 Route::get('/juegos/wordle', [GameController::class, 'wordle'])->name('juegos.wordle')->middleware('auth');
 Route::post('/juegos/save-score', [GameController::class, 'saveScore'])->middleware('auth');
 Route::get('/juegos/typespeed', [GameController::class, 'typeSpeed'])->name('juegos.typespeed')->middleware('auth');
+Route::get('/juegos/bombparty', [GameController::class, 'bombParty'])->name('juegos.bombparty')->middleware('auth');
 
 require __DIR__ . '/auth.php';
