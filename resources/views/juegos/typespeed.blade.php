@@ -59,26 +59,32 @@
         </div>
     </div>
 
-    <div id="modal-resultados" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">
+<div id="modal-resultados" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity duration-300">
         <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all scale-95 opacity-0" id="modal-content">
             <div class="p-8 text-center">
                 <h2 class="text-3xl font-black text-gray-800 dark:text-white mb-2 uppercase tracking-tighter">¡Prueba Finalizada!</h2>
                 <p class="text-gray-500 dark:text-gray-400 mb-8">Has completado el desafío con éxito.</p>
 
-                <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="grid grid-cols-2 gap-3 mb-4">
                     <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
-                        <p class="text-xs font-bold text-gray-400 uppercase">Velocidad</p>
+                        <p class="text-xs font-bold text-gray-400 uppercase mb-1">Velocidad</p>
                         <p class="text-2xl font-black text-indigo-600"><span id="res-wpm">0</span> <small class="text-xs">WPM</small></p>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
-                        <p class="text-xs font-bold text-gray-400 uppercase">Precisión</p>
+                        <p class="text-xs font-bold text-gray-400 uppercase mb-1">Precisión</p>
                         <p class="text-2xl font-black text-green-500"><span id="res-precision">0</span><small class="text-xs">%</small></p>
                     </div>
                 </div>
 
-                <div class="bg-indigo-600 p-6 rounded-2xl mb-8 shadow-lg shadow-indigo-200 dark:shadow-none">
-                    <p class="text-white/80 text-xs font-bold uppercase mb-1">Puntos Obtenidos</p>
-                    <p class="text-white text-5xl font-black" id="res-puntos">0</p>
+                <div class="grid grid-cols-2 gap-3 mb-8">
+                    <div class="bg-indigo-600 p-4 rounded-2xl shadow-lg shadow-indigo-200 dark:shadow-none flex flex-col justify-center items-center">
+                        <p class="text-white/80 text-[10px] font-bold uppercase mb-1">Puntos Obtenidos</p>
+                        <p class="text-white text-3xl font-black" id="res-puntos">0</p>
+                    </div>
+                    <div class="bg-yellow-500 p-4 rounded-2xl shadow-lg shadow-yellow-100 dark:shadow-none flex flex-col justify-center items-center">
+                        <p class="text-yellow-950/80 text-[10px] font-bold uppercase mb-1">Monedas Arcade</p>
+                        <p class="text-yellow-950 text-3xl font-black" id="res-coins">+0 🪙</p>
+                    </div>
                 </div>
 
                 <button onclick="window.location.href='/dashboard'" class="w-full py-4 bg-gray-900 dark:bg-white dark:text-gray-900 text-white font-bold rounded-xl hover:scale-[1.02] transition transform active:scale-95">

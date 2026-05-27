@@ -12,4 +12,9 @@ class Frame extends Model
         'price',
         'description'
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
 }

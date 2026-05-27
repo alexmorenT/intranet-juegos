@@ -53,71 +53,83 @@
                 <h2 class="text-3xl font-black text-gray-800 dark:text-white mb-2 uppercase tracking-tighter">¡BOOM!</h2>
                 <p class="text-gray-500 dark:text-gray-400 mb-8">La bomba ha explotado</p>
 
-                <div class="grid grid-cols-2 gap-3 mb-8">
+                <div class="grid grid-cols-2 gap-3 mb-4">
                     <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
                         <span class="block text-gray-400 text-xs font-bold uppercase mb-1">Palabras</span>
                         <span id="res-intentos" class="text-3xl font-black text-indigo-500">0</span>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
-                        <span class="block text-gray-400 text-xs font-bold uppercase mb-1">Puntos Obtenidos</span>
-                        <span id="res-puntos" class="text-3xl font-black text-green-500">0</span>
+                        <span class="block text-gray-400 text-xs font-bold uppercase mb-1">Estado Bomba</span>
+                        <span class="text-2xl font-black text-red-500 uppercase">K.O. 💥</span>
                     </div>
-
-                    <button onclick="window.location.href='/dashboard'" class="w-full py-4 bg-gray-900 dark:bg-white dark:text-gray-900 text-white font-bold rounded-xl hover:scale-[1.02] transition transform active:scale-95">
-                        VOLVER AL DASHBOARD
-                    </button>
                 </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-8">
+                    <div class="bg-indigo-600 p-4 rounded-2xl shadow-lg shadow-indigo-200 dark:shadow-none flex flex-col justify-center items-center">
+                        <p class="text-white/80 text-[10px] font-bold uppercase mb-1">Puntos Obtenidos</p>
+                        <p class="text-white text-3xl font-black" id="res-puntos">0</p>
+                    </div>
+                    <div class="bg-yellow-500 p-4 rounded-2xl shadow-lg shadow-yellow-100 dark:shadow-none flex flex-col justify-center items-center">
+                        <p class="text-yellow-950/80 text-[10px] font-bold uppercase mb-1">Monedas Arcade</p>
+                        <p class="text-yellow-950 text-3xl font-black" id="res-coins">+0 🪙</p>
+                    </div>
+                </div>
+
+                <button onclick="window.location.href='/dashboard'" class="w-full py-4 bg-gray-900 dark:bg-white dark:text-gray-900 text-white font-bold rounded-xl hover:scale-[1.02] transition transform active:scale-95">
+                    VOLVER AL DASHBOARD
+                </button>
             </div>
         </div>
+    </div>
 
-        <style>
-            @keyframes flicker {
-                0% {
-                    transform: translateX(-50%) scale(1);
-                    opacity: 1;
-                }
-
-                100% {
-                    transform: translateX(-50%) scale(1.3);
-                    opacity: 0.8;
-                }
+    <style>
+        @keyframes flicker {
+            0% {
+                transform: translateX(-50%) scale(1);
+                opacity: 1;
             }
 
-            .animate-flicker {
-                animation: flicker 0.4s infinite alternate;
+            100% {
+                transform: translateX(-50%) scale(1.3);
+                opacity: 0.8;
+            }
+        }
+
+        .animate-flicker {
+            animation: flicker 0.4s infinite alternate;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
             }
 
-            @keyframes shake {
-
-                0%,
-                100% {
-                    transform: translate(0, 0);
-                }
-
-                10%,
-                30%,
-                50%,
-                70%,
-                90% {
-                    transform: translate(-8px, 0);
-                }
-
-                20%,
-                40%,
-                60%,
-                80% {
-                    transform: translate(8px, 0);
-                }
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translate(-8px, 0);
             }
 
-            .animate-shake {
-                animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translate(8px, 0);
             }
-        </style>
+        }
 
-        <script>
-            window.csrfToken = "{{ csrf_token() }}";
-            window.bombPartyGameId = 3;
-        </script>
-        <script src="{{ asset('js/bombparty.js') }}"></script>
+        .animate-shake {
+            animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+        }
+    </style>
+
+    <script>
+        window.csrfToken = "{{ csrf_token() }}";
+        window.bombPartyGameId = 3;
+    </script>
+    <script src="{{ asset('js/bombparty.js') }}"></script>
 </x-app-layout>

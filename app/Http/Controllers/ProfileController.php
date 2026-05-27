@@ -19,6 +19,7 @@ class ProfileController extends Controller
     {
         return view('profile.edit', [
             'user' => $request->user(),
+            'userFrames' => $request->user()->frames,
         ]);
     }
 
@@ -30,7 +31,8 @@ class ProfileController extends Controller
         $user = $request->user();
 
         $request->validate([
-            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'], // Máximo 2MB
+            'frame_id' => ['nullable', 'integer'],
+            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'], 
         ]);
 
         $user->fill($request->validated());
@@ -51,6 +53,7 @@ class ProfileController extends Controller
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
+        $user->frame_id = $request->frame_id ?: null;
 
         $user->save();
 

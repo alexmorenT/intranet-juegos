@@ -16,7 +16,7 @@ async function iniciarJuego() {
     const contenedor = document.getElementById("contenedor");
     const teclado = document.getElementById("virtual-keyboard");
 
-    // 1. Configuración del input oculto (Corazón de la versión móvil)
+    // Configuración del input oculto (Corazón de la versión móvil)
     if (inputMovil) {
         inputMovil.value = " ";
         inputMovil.focus();
@@ -30,7 +30,7 @@ async function iniciarJuego() {
     // Al tocar el contenedor, forzamos foco
     contenedor.onclick = () => inputMovil.focus();
 
-    // 2. Reset de estado y UI
+    // Reset de estado y UI
     teclado.style.opacity = "1";
     contenedor.innerHTML = "";
     contenedor.classList.remove("flex-col");
@@ -50,7 +50,7 @@ async function iniciarJuego() {
     if (intervaloWPM) clearInterval(intervaloWPM);
     document.getElementById("wpm-realtime").innerText = "0";
 
-    // 3. Carga de frases
+    // Carga de frases
     let frases = [];
     try {
         const respuesta = await fetch("/js/frases.json");
@@ -63,7 +63,7 @@ async function iniciarJuego() {
     const fraseAleatoria = frases[Math.floor(Math.random() * frases.length)];
     const palabras = fraseAleatoria.split(" ");
 
-    // 4. Generación de la estructura de letras
+    // Generación de la estructura de letras
     palabras.forEach((palabra, pIndex) => {
         const wordSpan = document.createElement("span");
         wordSpan.style.display = "inline-block";
@@ -219,7 +219,7 @@ function finalizarJuego() {
         content.classList.add("scale-100", "opacity-100");
     }, 10);
 
-    // Guardar en BD
+    // Guardar en BD recogiendo las monedas asociadas
     fetch("/juegos/save-score", {
         method: "POST",
         headers: {
@@ -231,7 +231,14 @@ function finalizarJuego() {
             points: puntosFinales,
             time_taken: segundosTotales,
         }),
-    });
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("res-coins").innerText = "+" + data.coins_earned;
+        }
+    })
+    .catch(err => console.error("Error guardando monedas:", err));
 }
 
 function actualizarWPMRealTime() {

@@ -185,20 +185,26 @@
                     La palabra era: <span id="res-palabra" class="text-indigo-500 font-bold uppercase"></span>
                 </p>
 
-                <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="grid grid-cols-2 gap-3 mb-4">
                     <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
-                        <p class="text-xs font-bold text-gray-400 uppercase">Tiempo</p>
-                        <p class="text-2xl font-black text-indigo-600"><span id="res-min">0</span> <small class="text-xs">min</small></p>
+                        <p class="text-xs font-bold text-gray-400 uppercase mb-1">Tiempo</p>
+                        <p class="text-2xl font-black text-indigo-600"><span id="res-min">0</span></p>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
-                        <p class="text-xs font-bold text-gray-400 uppercase">Intentos</p>
-                        <p class="text-2xl font-black text-green-500"><span id="res-intentos">0</span><small class="text-xs"> intentos</small></p>
+                        <p class="text-xs font-bold text-gray-400 uppercase mb-1">Intentos</p>
+                        <p class="text-2xl font-black text-green-500"><span id="res-intentos">0</span></p>
                     </div>
                 </div>
 
-                <div class="bg-indigo-600 p-6 rounded-2xl mb-8 shadow-lg shadow-indigo-200 dark:shadow-none">
-                    <p class="text-white/80 text-xs font-bold uppercase mb-1">Puntos Obtenidos</p>
-                    <p class="text-white text-5xl font-black" id="res-puntos">0</p>
+                <div class="grid grid-cols-2 gap-3 mb-8">
+                    <div class="bg-indigo-600 p-4 rounded-2xl shadow-lg shadow-indigo-200 dark:shadow-none flex flex-col justify-center items-center">
+                        <p class="text-white/80 text-[10px] font-bold uppercase mb-1">Puntos Obtenidos</p>
+                        <p class="text-white text-3xl font-black" id="res-puntos">0</p>
+                    </div>
+                    <div class="bg-yellow-500 p-4 rounded-2xl shadow-lg shadow-yellow-100 dark:shadow-none flex flex-col justify-center items-center">
+                        <p class="text-yellow-950/80 text-[10px] font-bold uppercase mb-1">Monedas Arcade</p>
+                        <p class="text-yellow-950 text-3xl font-black" id="res-coins">+0 🪙</p>
+                    </div>
                 </div>
 
                 <button onclick="window.location.href='/dashboard'" class="w-full py-4 bg-gray-900 dark:bg-white dark:text-gray-900 text-white font-bold rounded-xl hover:scale-[1.02] transition transform active:scale-95">

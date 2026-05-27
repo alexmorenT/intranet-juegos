@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Score; // Asegúrate de tener el modelo Score
+use App\Models\Score;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +13,7 @@ class StatsController extends Controller
     {
         $userId = Auth::id();
 
-        // 1. Récords personales (Máxima puntuación por juego)
+        // Récords personales
         $stats = DB::table('scores')
             ->select('game_id', DB::raw('MAX(points) as max_score'), DB::raw('AVG(points) as avg_score'))
             ->where('user_id', $userId)
@@ -21,7 +21,7 @@ class StatsController extends Controller
             ->get()
             ->keyBy('game_id');
 
-        // 2. Evolución últimos 7 días
+        // Evolución últimos 7 días
         $evolucion = Score::where('user_id', $userId)
             ->where('created_at', '>=', now()->subDays(7))
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(points) as daily_points'))
@@ -29,7 +29,7 @@ class StatsController extends Controller
             ->orderBy('date', 'ASC')
             ->get();
             
-        // 3. Media Global de la Empresa (Promedio de todos los registros de la tabla scores)
+        // Media Global de la Empresa 
         $globalStats = DB::table('scores')
             ->select('game_id', DB::raw('AVG(points) as global_avg'))
             ->groupBy('game_id')

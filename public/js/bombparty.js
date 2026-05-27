@@ -152,5 +152,12 @@ async function enviarPuntuacion() {
             points: puntosTotales,
             time_taken: 0,
         }),
-    });
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById("res-coins").innerText = "+" + data.coins_earned;
+        }
+    })
+    .catch(err => console.error("Error guardando monedas:", err));
 }

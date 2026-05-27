@@ -9,7 +9,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
+Route::get('/inicio', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -20,14 +20,14 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+    Route::get('/inicio', [UserController::class, 'index'])->name('dashboard');
 });
 
 Route::get('/estadisticas', [App\Http\Controllers\StatsController::class, 'index'])
     ->name('estadisticas')
     ->middleware('auth');
 
-    Route::get('/ranking', [App\Http\Controllers\RankingController::class, 'index'])
+Route::get('/ranking', [App\Http\Controllers\RankingController::class, 'index'])
     ->name('ranking')
     ->middleware('auth');
 
@@ -35,5 +35,14 @@ Route::get('/juegos/wordle', [GameController::class, 'wordle'])->name('juegos.wo
 Route::post('/juegos/save-score', [GameController::class, 'saveScore'])->middleware('auth');
 Route::get('/juegos/typespeed', [GameController::class, 'typeSpeed'])->name('juegos.typespeed')->middleware('auth');
 Route::get('/juegos/bombparty', [GameController::class, 'bombParty'])->name('juegos.bombparty')->middleware('auth');
+
+Route::get('/tienda', [App\Http\Controllers\ShopController::class, 'index'])
+    ->name('tienda')
+    ->middleware('auth');
+
+
+Route::post('/tienda/comprar/{id}', [App\Http\Controllers\ShopController::class, 'buyFrame'])
+    ->name('tienda.comprar')
+    ->middleware('auth');
 
 require __DIR__ . '/auth.php';

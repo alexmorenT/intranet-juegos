@@ -16,13 +16,13 @@ class UserController extends Controller
         $userId = $user->id;
         $deptId = $user->department_id;
 
-        // 1. Puntos totales del usuario
+        // Puntos totales del usuario
         $puntosTotales = Score::where('user_id', $userId)->sum('points');
 
-        // 2. Juegos hechos hoy
+        // Juegos hechos hoy
         $juegosHoy = Score::where('user_id', $userId)->whereDate('created_at', today())->count();
 
-        // 3. CÁLCULO DE POSICIÓN REAL EN EL DEPARTAMENTO
+        // CÁLCULO DE POSICIÓN REAL EN EL DEPARTAMENTO
         $rankingDepto = DB::table('users')
             ->leftJoin('scores', 'users.id', '=', 'scores.user_id')
             ->select('users.id', DB::raw('SUM(IFNULL(scores.points, 0)) as total_points'))
@@ -35,7 +35,7 @@ class UserController extends Controller
         $indice = $rankingDepto->search(fn($item) => $item->id == $userId);
         $posicion = ($indice !== false) ? $indice + 1 : '-';
 
-        // 4. CÁLCULO DE LA RACHA (Días consecutivos jugando)
+        // CÁLCULO DE LA RACHA (Días consecutivos jugando)
         $racha = 0;
         $fechasJugadas = Score::where('user_id', $userId)
             ->select(DB::raw('DATE(created_at) as date'))
@@ -62,12 +62,12 @@ class UserController extends Controller
             }
         }
 
-        // 5. Verificación de juegos diarios
+        // Verificación de juegos diarios
         $yaJugoWordle = Score::where('user_id', $userId)->where('game_id', 1)->whereDate('created_at', today())->exists();
         $yaJugoTypeSpeed = Score::where('user_id', $userId)->where('game_id', 2)->whereDate('created_at', today())->exists();
         $yaJugoBombParty = Score::where('user_id', $userId)->where('game_id', 3)->whereDate('created_at', today())->exists();
 
-        // Miembros totales para el "Ranking #X de Y"
+        // Miembros totales para el "Ranking DEPARTAMENTO"
         $totalUsuariosDepto = User::where('department_id', $deptId)->count();
 
         return view('dashboard', compact(

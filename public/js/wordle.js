@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }, 1000);
 
-    // 1. Cargar diccionario y seleccionar palabra
+    // Cargar diccionario y seleccionar palabra
     async function inicializarDiccionario() {
         try {
             const respuesta = await fetch("/js/spanish.json");
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 diferenciaMs / (1000 * 60 * 60 * 24),
             );
 
-            // El operador % (módulo) asegura que el índice siempre esté dentro del rango del array
+            // El operador "%" asegura que el índice siempre esté dentro del rango del array
             const indiceHoy = diasTranscurridos % palabrasValidas.length;
 
             const seleccionada = palabrasValidas[indiceHoy];
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const todosLosInputs = document.querySelectorAll('[id$="-try"] input');
     let intentoActual = 0;
 
-    // 2. Función para actualizar colores del teclado visual
+    // Función para actualizar colores del teclado visual
     function actualizarTecladoEstatus(letra, estado) {
         const tecla = document.getElementById(`key-${letra.toUpperCase()}`);
         if (!tecla) return;
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // 3. Eventos de entrada (teclado físico)
+    // Eventos de entrada (teclado físico)
     todosLosInputs.forEach((element, index) => {
         element.addEventListener("input", (e) => {
             let valor = e.target.value.toUpperCase().replace(/[^A-ZÑ]/g, "");
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-    // 4. Lógica de procesado de palabra
+    // Lógica de procesado de palabra
     async function procesarIntento() {
         if (intentoActual >= intentos.length) return;
 
@@ -134,7 +134,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (letrasUsuario.includes("")) return;
 
-        // VALIDACIÓN: ¿Existe la palabra en el JSON?
         if (!diccionarioCompleto.includes(palabraUsuario)) {
             filaActual.classList.add("shake");
             setTimeout(() => filaActual.classList.remove("shake"), 400);
@@ -169,7 +168,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
 
-        // Aplicar estilos visuales (Uso de .style para forzar el color sobre el 'disabled')
         inputsFila.forEach((el, i) => {
             el.disabled = true; // Bloqueamos la fila
             el.style.color = "white";
@@ -206,7 +204,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // 5. Envío de datos a Laravel
+    // Envío de datos a Laravel
     function mostrarModalResultado(puntos, intentosHechos, palabraCorrecta) {
         const tiempoFinal = Date.now();
         const tiempoTranscurrido = Math.floor(
@@ -217,7 +215,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const segs = tiempoTranscurrido % 60;
         const tiempoFormateado = `${mins}:${String(segs).padStart(2, "0")}`;
 
-        // 2. Lógica para mostrar la palabra si ha perdido
         const mensajeElemento = document.getElementById("modal-mensaje");
         const containerPalabra = document.getElementById(
             "palabra-correcta-container",
@@ -225,12 +222,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const spanPalabra = document.getElementById("res-palabra");
 
         if (puntos === 0) {
-            // Si perdió: Cambiamos el mensaje y mostramos la palabra
             mensajeElemento.innerText = "¡Vaya! No has podido adivinarla.";
             spanPalabra.innerText = palabraCorrecta;
             containerPalabra.classList.remove("hidden");
         } else {
-            // Si ganó: Ocultamos la palabra
             mensajeElemento.innerText = "¡Has completado el desafío con éxito!";
             containerPalabra.classList.add("hidden");
         }
@@ -248,7 +243,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             content.classList.add("scale-100", "opacity-100");
         }, 10);
 
-        // Guardar en BD
         fetch("/juegos/save-score", {
             method: "POST",
             headers: {
@@ -260,7 +254,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 points: puntos,
                 time_taken: tiempoTranscurrido,
             }),
-        });
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById("res-coins").innerText = "+" + data.coins_earned;
+            }
+        })
+        .catch(err => console.error("Error guardando monedas:", err));
     }
 
     // Evento ENTER físico

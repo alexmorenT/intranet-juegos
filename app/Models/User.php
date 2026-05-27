@@ -65,4 +65,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Frame::class);
     }
+
+    public function frames()
+    {
+        return $this->belongsToMany(Frame::class)->withTimestamps();
+    }
 }
