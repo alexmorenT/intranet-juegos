@@ -44,7 +44,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             // Guardamos el diccionario para validaciones posteriores
             diccionarioCompleto = datos.map((p) => p.toLowerCase());
 
-            console.log("La palabra de hoy está lista: ", palabraObjetivo);
         } catch (error) {
             console.error("Error en la lógica diaria:", error);
             palabraObjetivo = "MAREO"; // Palabra de respaldo
