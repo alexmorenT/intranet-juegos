@@ -15,20 +15,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Creamos un departamento
+        // Creamos un departamento
         $depto = \App\Models\Department::create([
             'name' => 'Desarrollo'
         ]);
 
-        // 2. Creamos un usuario y lo asignamos al departamento
+        //  Creamos un usuario y lo asignamos al departamento
         $user = \App\Models\User::create([
             'name' => 'Jugador Uno',
             'email' => 'test@example.com',
             'password' => bcrypt('password'), // Siempre encriptada
-            'department_id' => $depto->id,    // Aquí usamos la relación
+            'department_id' => $depto->id,    // Usamos la relación
         ]);
 
-        // 3. Creamos un juego
+        //  Creamos un juego
         $game = \App\Models\Game::create([
             'name' => 'Wordle',
             'slug' => 'wordle',

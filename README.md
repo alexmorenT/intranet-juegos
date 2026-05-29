@@ -1,59 +1,145 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+#  Intranet Arcade
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Plataforma web interna corporativa orientada a la **gamificación y la agilidad mental** de los empleados mediante desafíos diarios competitivos. El sistema integra los siguientes módulos principales:
 
-## About Laravel
+-  **Juegos diarios** — Wordle, TypeSpeed y BombParty con retos renovados cada día.
+-  **Sistema de economía** — Moneda interna y tienda de marcos cosméticos para avatares.
+-  **Historial de puntuaciones** — Registro individual y colectivo de partidas.
+-  **Gráfico de radar analítico** — Visualización de habilidades desglosadas por categoría.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+##  Stack Tecnológico
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Capa | Tecnología |
+|---|---|
+| Backend | Laravel 11.x (PHP 8.2+) |
+| Frontend | Tailwind CSS + JavaScript nativo |
+| Base de Datos | MySQL / MariaDB |
+| Empaquetador | Vite |
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+##  Requisitos Previos
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Asegúrate de tener instaladas las siguientes herramientas antes de continuar:
 
-## Laravel Sponsors
+- **PHP** `>= 8.2` (con extensiones: `pdo_mysql`, `mbstring`, `openssl`, `tokenizer`, `xml`)
+- **Composer** (gestor de dependencias PHP)
+- **Node.js & NPM** (versión LTS recomendada)
+- **MySQL / MariaDB** (servidor de base de datos local)
+- **Git** *(opcional — solo necesario si se clona desde GitHub)*
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+##  Guía de Instalación
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Paso 1 — Obtención del Código
 
-## Contributing
+**Opción A — Pendrive físico** *(entorno sin conexión)*
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Localiza el archivo `.rar` en el pendrive físico entregado junto al proyecto. Descomprímelo en el directorio de trabajo local de tu elección.
 
-## Code of Conduct
+**Opción B — Repositorio GitHub** *(requiere conexión a internet)*
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+git clone https://github.com/alexmorenT/intranet-juegos.git intranet-arcade
+cd intranet-arcade
+```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Paso 2 — Instalación de Dependencias
 
-## License
+Ejecuta los siguientes comandos de forma **independiente** desde la raíz del proyecto:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Backend (PHP / Composer):**
+```bash
+composer install
+```
+
+**Frontend (Node.js / NPM):**
+```bash
+npm install
+```
+
+---
+
+### Paso 3 — Configuración del Entorno
+
+Copia el archivo de entorno de ejemplo:
+
+```bash
+cp .env.example .env
+```
+
+Abre el archivo `.env` generado y configura el bloque de conexión a la base de datos con los siguientes valores locales:
+
+```ini
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=intranet_juegos
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+---
+
+### Paso 4 — Inicialización del Sistema
+
+Genera la clave criptográfica de la aplicación:
+
+```bash
+php artisan key:generate
+```
+
+Crea el enlace simbólico para el sistema de almacenamiento de archivos:
+
+```bash
+php artisan storage:link
+```
+
+---
+
+### Paso 5 — Importación de la Base de Datos
+
+>  **El esquema de la base de datos se importa manualmente desde el volcado SQL incluido en el repositorio. No se utiliza el sistema de migraciones de Laravel.**
+
+El archivo de volcado SQL se encuentra en la **raíz del repositorio**, en la siguiente ruta exacta:
+
+```
+intranet-arcade/intranet_juegos.sql
+```
+
+**Pasos a seguir:**
+
+1. Accede a tu gestor de base de datos local (p. ej. **phpMyAdmin** o **MySQL Workbench**).
+2. Crea una nueva base de datos vacía con el nombre exacto: `intranet_juegos`.
+3. Selecciona dicha base de datos e importa el archivo `intranet_juegos.sql`.
+
+---
+
+### Paso 6 — Ejecución en Desarrollo
+
+> **ATENCIÓN:** Este paso requiere **dos terminales simultáneas** abiertas en la raíz del proyecto.
+
+**Terminal 1 — Servidor PHP (Backend):**
+```bash
+php artisan serve
+```
+
+**Terminal 2 — Compilación de assets en vivo (Frontend):**
+```bash
+npm run dev
+```
+
+---
+
+## Acceso Local
+
+Una vez levantados ambos servicios, el entorno de desarrollo estará disponible en:
+
+```
+http://127.0.0.1:8000
+```
