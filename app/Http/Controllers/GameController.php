@@ -2,62 +2,81 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\SaveScoreRequest;
 use App\Models\Score;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GameController extends Controller
 {
-    public function saveScore(Request $request)
+    public function saveScore(SaveScoreRequest $request)
     {
+        $gameId = $request->integer('game_id');
+        $points = $request->integer('points');
+        $timeTaken = $request->integer('time_taken');
+
         try {
-            Score::create([
-                'user_id' => Auth::id(),
-                'game_id' => $request->game_id,
-                'points' => $request->points,
-                'time_taken' => $request->time_taken ?? 0,
-            ]);
+            $coinsEarned = DB::transaction(function () use ($gameId, $points, $timeTaken) {
+                // Bloqueo de la fila del usuario: serializa peticiones concurrentes para que el límite diario no se salte
+                $user = User::whereKey(Auth::id())->lockForUpdate()->firstOrFail();
 
+                $yaJugo = Score::where('user_id', $user->id)
+                    ->where('game_id', $gameId)
+                    ->whereDate('created_at', now()->toDateString())
+                    ->exists();
 
-            $user = Auth::user();
-            $gameId = $request->game_id;
-            $points = $request->points;
-            $coinsEarned = 0;
-
-
-            if ($points > 0) {
-                switch ($gameId) {
-                    case 1: // WORDLE
-                        // Si gana en el intento 1 son 500p -> 200 coins. Si gana en el 6 son 100p -> 40 coins.
-                        $coinsEarned = max(10, round($points * 0.4)); 
-                        break;
-
-                    case 2: // TYPESPEED
-                        $coinsEarned = max(10, round($points * 0.35));
-                        break;
-
-                    case 3: // BOMBPARTY
-                        // Otorgamos un 25% de la puntuación total en monedas
-                        $coinsEarned = max(10, round($points * 0.25));
-                        break;
-                    
-                    default:
-                        $coinsEarned = max(5, round($points * 0.1));
-                        break;
+                if ($yaJugo) {
+                    return null;
                 }
-            }
 
-            $user->coins += $coinsEarned;
-            $user->save();
+                Score::create([
+                    'user_id' => $user->id,
+                    'game_id' => $gameId,
+                    'points' => $points,
+                    'time_taken' => $timeTaken,
+                ]);
+
+                $coins = $this->coinsFor($gameId, $points);
+
+                // increment() genera un UPDATE atómico (coins = coins + n), sin leer-modificar-escribir en PHP
+                $user->increment('coins', $coins);
+
+                return $coins;
+            });
+
+            if ($coinsEarned === null) {
+                return response()->json(['error' => 'Ya has guardado una partida de este juego hoy.'], 409);
+            }
 
             return response()->json([
                 'success' => true,
-                'coins_earned' => $coinsEarned
+                'coins_earned' => $coinsEarned,
             ]);
 
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        } catch (\Throwable $e) {
+            Log::error('Error guardando puntuación', ['user_id' => Auth::id(), 'game_id' => $gameId, 'exception' => $e]);
+
+            return response()->json(['error' => 'No se pudo guardar la puntuación.'], 500);
         }
+    }
+
+    private function coinsFor(int $gameId, int $points): int
+    {
+        if ($points <= 0) {
+            return 0;
+        }
+
+        return match ($gameId) {
+            // WORDLE: si gana en el intento 1 son 500p -> 200 coins. Si gana en el 6 son 100p -> 40 coins.
+            1 => (int) max(10, round($points * 0.4)),
+            // TYPESPEED
+            2 => (int) max(10, round($points * 0.35)),
+            // BOMBPARTY: 25% de la puntuación total en monedas
+            3 => (int) max(10, round($points * 0.25)),
+            default => (int) max(5, round($points * 0.1)),
+        };
     }
 
     public function wordle()
@@ -77,7 +96,7 @@ class GameController extends Controller
     public function typeSpeed()
     {
         $yaJugo = Score::where('user_id', Auth::id())
-            ->where('game_id', 2) 
+            ->where('game_id', 2)
             ->whereDate('created_at', now()->toDateString())
             ->exists();
 
@@ -91,7 +110,7 @@ class GameController extends Controller
     public function bombParty()
     {
         $yaJugo = Score::where('user_id', Auth::id())
-            ->where('game_id', 3) 
+            ->where('game_id', 3)
             ->whereDate('created_at', now()->toDateString())
             ->exists();
 

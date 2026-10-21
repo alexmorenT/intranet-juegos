@@ -65,6 +65,10 @@ return [
             'transport' => 'resend',
         ],
 
+        'mailtrap-sdk' => [
+            'transport' => 'mailtrap-sdk',
+        ],
+
         'sendmail' => [
             'transport' => 'sendmail',
             'path' => env('MAIL_SENDMAIL_PATH', '/usr/sbin/sendmail -bs -i'),
